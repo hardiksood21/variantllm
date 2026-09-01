@@ -3,9 +3,9 @@ title: VariantLLM
 emoji: 🧬
 colorFrom: indigo
 colorTo: pink
-sdk: streamlit
-sdk_version: "1.35.0"
-app_file: app/app.py
+sdk: gradio
+sdk_version: "6.26.0"
+app_file: app.py
 pinned: false
 license: mit
 ---
@@ -16,7 +16,7 @@ license: mit
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B.svg)](https://streamlit.io)
+[![Gradio](https://img.shields.io/badge/Gradio-App-orange.svg)](https://huggingface.co/spaces/hardiksood21/variantllm)
 
 An open-source, production-grade genomic foundation AI software system designed to predict the pathogenicity, functional consequence, and zero-shot evolutionary fitness scores of human genetic mutations and single-nucleotide variants (SNVs) powered by **Meta's ESM-2 Foundation Model**.
 
@@ -31,7 +31,7 @@ Developed by **Hardik Sood** (Indian Institute of Technology (BHU), Varanasi).
    \Delta \text{Score} = \log P(\text{Wildtype Residue} \mid \text{Context}) - \log P(\text{Mutant Residue} \mid \text{Context})
    Quantifying sequence disruption without requiring supervised task-specific fine-tuning (aligned with *Meta ESM1v* and *DeepMind AlphaMissense* methodologies).
 3. **Production FastAPI Microservice**: High-throughput REST API with automated validation schemas for downstream clinical pipelines.
-4. **Interactive Web Dashboard**: Streamlit interface with sequence mismatch mapping, risk gauges, residue entropy indicators, and preset clinical mutations (*TP53*, *BRCA1*, *EGFR*, *BRAF*, *KRAS*).
+4. **Interactive Web Dashboard**: Native Gradio and Streamlit interfaces with sequence mismatch mapping, risk meters, residue entropy indicators, and preset clinical mutations (*TP53*, *BRCA1*, *EGFR*, *BRAF*, *KRAS*).
 5. **Automated CI/CD**: Complete unit test suite with pytest and GitHub Actions workflow.
 
 ---
@@ -43,8 +43,9 @@ variantllm/
 ├── .github/
 │   └── workflows/
 │       └── tests.yml                     # Automated CI/CD workflow
+├── app.py                                # Native Gradio Web Application (HF Spaces)
 ├── app/
-│   └── app.py                            # Interactive Streamlit Web Application
+│   └── app.py                            # Streamlit Web Application
 ├── data/
 │   ├── processed/
 │   │   └── clinvar_benchmark_sample.csv  # Curated ClinVar clinical benchmark
@@ -97,9 +98,9 @@ pip install -e .
 pytest tests/ -v
 `
 
-### 3. Launch Interactive Web App
+### 3. Launch Interactive Gradio Web App
 `ash
-streamlit run app/app.py
+python app.py
 `
 
 ### 4. Launch FastAPI REST Service
