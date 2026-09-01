@@ -1,0 +1,10 @@
+torch>=2.0.0
+transformers>=4.30.0
+numpy
+pandas
+scikit-learn
+fastapi
+uvicorn
+streamlit
+pytest
+httpx

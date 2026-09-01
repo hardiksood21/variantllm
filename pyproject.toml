@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "variantllm"
+version = "0.1.0"
+description = "Genomic Foundation Model & Clinical Variant Effect Prediction Engine"
+authors = [{ name = "Hardik Sood", email = "hardik.sood.phe24@itbhu.ac.in" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0.0",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "fastapi",
+    "uvicorn",
+    "streamlit"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
