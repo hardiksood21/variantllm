@@ -7,6 +7,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "src"
 import gradio as gr
 import pandas as pd
 import numpy as np
+import torch
+
+try:
+    import spaces
+    has_spaces = True
+except ImportError:
+    has_spaces = False
+
 from variantllm.inference.scorer import ZeroShotVariantScorer
 
 # Load Foundation Model
@@ -45,7 +53,7 @@ PRESETS = {
     )
 }
 
-def analyze_variant(gene, anno, wt_seq, mut_seq):
+def _predict(gene, anno, wt_seq, mut_seq):
     if not wt_seq or not mut_seq or len(wt_seq) < 3 or len(mut_seq) < 3:
         return "Error: Please provide valid protein sequences of at least 3 residues.", 0.0, 0.0, 0.0, pd.DataFrame()
         
@@ -72,13 +80,18 @@ def analyze_variant(gene, anno, wt_seq, mut_seq):
         summary_df
     )
 
+if has_spaces:
+    analyze_variant = spaces.GPU(_predict)
+else:
+    analyze_variant = _predict
+
 def load_preset(choice):
     if choice in PRESETS:
         g, a, w, m = PRESETS[choice]
         return g, a, w, m
     return "TP53", "p.Arg175His", "", ""
 
-with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction") as demo:
     gr.Markdown("# 🧬 VariantLLM: Clinical Variant Effect Prediction Engine")
     gr.Markdown("Zero-shot evolutionary fitness scoring powered by **Meta ESM-2 Transformer Foundation Model**.")
     
@@ -118,4 +131,4 @@ with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction", theme=gr
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(ssr_mode=False)
