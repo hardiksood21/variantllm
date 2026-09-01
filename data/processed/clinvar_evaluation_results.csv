@@ -1,0 +1,9 @@
+Gene,Protein Change,ClinVar Label,True Label,Predicted Class,Pathogenicity Prob,Zero-Shot LLR (Score),Site Entropy
+TP53,p.Arg175His,Pathogenic,1,Pathogenic,0.7961,4.2246,1.404
+TP53,p.Arg273His,Pathogenic,1,Pathogenic,0.7897,4.1461,1.4996
+TP53,p.Pro47Pro,Benign,0,Benign,0.3208,0.0,0.037
+EGFR,p.Leu858Arg,Pathogenic,1,Pathogenic,0.9644,8.0993,0.2253
+BRAF,p.Val600Glu,Pathogenic,1,Pathogenic,0.7439,3.6329,1.5806
+KRAS,p.Gly12Asp,Pathogenic,1,Pathogenic,0.7836,4.0732,1.5304
+KRAS,p.Ala59Ala,Benign,0,Benign,0.3208,0.0,0.0429
+BRCA1,p.Cys61Gly,Pathogenic,1,Pathogenic,0.9896,10.6178,0.0107
