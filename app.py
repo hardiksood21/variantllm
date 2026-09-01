@@ -1,4 +1,10 @@
-﻿import gradio as gr
+﻿import os
+import sys
+
+# Add src to python path for seamless execution on Hugging Face Spaces
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
+
+import gradio as gr
 import pandas as pd
 import numpy as np
 from variantllm.inference.scorer import ZeroShotVariantScorer

@@ -1,4 +1,10 @@
-﻿import streamlit as st
+﻿import os
+import sys
+
+# Add src to python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
+
+import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -32,7 +38,6 @@ scorer = load_scorer()
 st.markdown('<div class="main-title">🧬 VariantLLM: Clinical Variant Effect Prediction Engine</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Zero-shot evolutionary fitness scoring and clinical pathogenicity prediction powered by <b>Meta ESM-2 Transformer Foundation Model</b>.</div>', unsafe_allow_html=True)
 
-# Curated Clinical Human Cancer and Rare Disease Benchmarks
 PRESETS = {
     "TP53 p.Arg175His (Li-Fraumeni / Cancer Driver - Pathogenic)": {
         "gene": "TP53", "anno": "p.Arg175His",
