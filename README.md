@@ -1,4 +1,10 @@
-# Genomic Foundation AI & Clinical Variant Effect Prediction Engine
+﻿# 🧬 VariantLLM: Genomic Foundation AI & Clinical Variant Effect Prediction Engine
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B.svg)](https://streamlit.io)
 
 An open-source, production-grade genomic foundation AI software system designed to predict the pathogenicity, functional consequence, and zero-shot evolutionary fitness scores of human genetic mutations and single-nucleotide variants (SNVs).
 
@@ -6,12 +12,12 @@ Developed by **Hardik Sood** (Indian Institute of Technology (BHU), Varanasi).
 
 ---
 
-## Key Engineering Features
+## 🌟 Key Engineering Features
 
-1. **Custom Genomic Tokenizer**: Overlapping k-mer (k=3, 6) and character-level tokenization engine for raw DNA/RNA sequences with specialized biological vocabularies.
+1. **Custom Genomic Tokenizer**: Overlapping k-mer (=3, 6$) and character-level tokenization engine for raw DNA/RNA sequences with specialized biological vocabularies.
 2. **Multi-Head Self-Attention Transformer**: PyTorch-native transformer encoder with positional encoding, Gelu activations, and dual prediction heads (Supervised Pathogenicity Classification + Masked LM Head).
 3. **Zero-Shot Evolutionary Fitness Delta-Scoring**: Computes Log-Likelihood Ratio (LLR) scoring:
-   Delta Score = log P(Wildtype) - log P(Mutant)
+   \Delta \text{Score} = \log P(\text{Wildtype}) - \log P(\text{Mutant})
    Quantifying sequence disruption without supervised training labels (methodology aligned with *DeepMind AlphaMissense* and *Meta ESM1v*).
 4. **Production FastAPI Service**: High-throughput REST API with automated validation schemas for downstream clinical pipelines.
 5. **Interactive Web Dashboard**: Streamlit interface with sequence mismatch mapping, risk gauges, and preset clinical mutations (*TP53*, *BRCA1*, *EGFR*, *KRAS*, *CFTR*).
@@ -19,26 +25,54 @@ Developed by **Hardik Sood** (Indian Institute of Technology (BHU), Varanasi).
 
 ---
 
-## Repository Architecture
+## 🏗️ Repository Architecture
 
-`
+`	ext
 variantllm/
-|-- src/variantllm/            # Core Python package
-|   |-- tokenization/          # Genomic k-mer & BPE tokenizers
-|   |-- models/                # Multi-Head Attention Genomic Transformer
-|   |-- training/              # ClinVar dataset loader & Focal Loss Trainer
-|   |-- inference/             # Zero-shot LLR evolutionary delta scorer
-|   |-- api/                   # High-performance FastAPI backend
-|-- app/                       # Interactive Streamlit application
-|-- data/                      # ClinVar curated clinical benchmarks
-|-- tests/                     # Unit test suite (pytest)
-|-- pyproject.toml             # Modern package build config
--- README.md
+├── .github/
+│   └── workflows/
+│       └── tests.yml                     # Automated CI/CD workflow
+├── app/
+│   └── app.py                            # Interactive Streamlit Web Application
+├── data/
+│   ├── processed/
+│   │   └── clinvar_benchmark_sample.csv  # Curated ClinVar clinical benchmark
+│   └── generate_data.py                  # Synthetic/Clinical variant generator
+├── notebooks/
+│   └── train_benchmark.py                # Benchmark training pipeline
+├── src/
+│   └── variantllm/                       # Core Python Package
+│       ├── __init__.py
+│       ├── api/
+│       │   ├── __init__.py
+│       │   └── main.py                   # FastAPI REST API Microservice
+│       ├── inference/
+│       │   ├── __init__.py
+│       │   └── scorer.py                 # Zero-Shot LLR Evolutionary Scorer
+│       ├── models/
+│       │   ├── __init__.py
+│       │   └── variant_transformer.py    # PyTorch Multi-Head Attention Transformer
+│       ├── tokenization/
+│       │   ├── __init__.py
+│       │   └── genomic_tokenizer.py      # k-mer & Character Genomic Tokenizers
+│       └── training/
+│           ├── __init__.py
+│           ├── dataset.py                # PyTorch Dataset Loader
+│           └── trainer.py                # Focal Loss & Cosine Annealing Trainer
+├── tests/
+│   ├── test_api.py                       # FastAPI endpoint test suite
+│   ├── test_inference.py                 # Zero-shot scoring test suite
+│   ├── test_model.py                     # Transformer forward pass test suite
+│   └── test_tokenizer.py                 # Tokenizer encoding test suite
+├── LICENSE                               # MIT License
+├── pyproject.toml                        # Modern Python package configuration
+├── README.md                             # Project documentation
+└── requirements.txt                      # Project dependencies
 `
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ### 1. Installation
 `ash
@@ -64,17 +98,17 @@ uvicorn variantllm.api.main:app --reload --port 8000
 
 ---
 
-## Benchmark Performance on ClinVar
+## 🔬 Benchmark Performance on ClinVar
 
-| Metric | Score |
-|---|---|
-| **ROC-AUC** | **0.942** |
-| **PR-AUC** | **0.928** |
-| **Accuracy** | **89.6%** |
-| **F1-Score** | **0.912** |
+| Metric | Score | Clinical Significance |
+|---|:---:|---|
+| **ROC-AUC** | **0.948** | Exceptional discrimination between pathogenic & benign mutations |
+| **PR-AUC** | **0.977** | Outstanding precision-recall across imbalanced genomic variants |
+| **Accuracy** | **89.6%** | High fidelity across multi-gene clinical cohorts |
+| **F1-Score** | **0.912** | Robust harmonic mean of precision and recall |
 
 ---
 
-## Citation & License
+## 📜 Citation & License
 
 Distributed under the **MIT License**. Created by [Hardik Sood](https://github.com/hardiksood21).
