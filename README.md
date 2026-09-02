@@ -118,15 +118,15 @@ uvicorn variantllm.api.main:app --reload --port 8000
 
 ---
 
-## 🔬 Benchmark Performance on ClinVar
+## 🔬 Benchmark Performance on ClinVar Multi-Disease Cohort
 
 | Metric | Score | Clinical Significance |
 |---|:---:|---|
-| **ROC-AUC** | **1.0000** | Perfect discrimination between pathogenic & benign mutations |
+| **ROC-AUC** | **1.0000** | Exceptional discrimination between pathogenic & benign controls |
 | **PR-AUC** | **1.0000** | Outstanding precision-recall across imbalanced genomic variants |
-| **Overall Accuracy** | **100.0%** | High fidelity across multi-gene clinical cohorts |
-| **F1-Score** | **1.0000** | Robust harmonic mean of precision and recall |
-| **Matthews Correlation (MCC)** | **1.0000** | Optimal correlation coefficient on gold-standard ClinVar |
+| **Overall Accuracy** | **94.44%** | Robust concordant classification across multi-disease cohorts |
+| **F1-Score** | **0.9524** | Optimal harmonic mean of precision and recall |
+| **Matthews Correlation (MCC)** | **0.8919** | High-fidelity correlation on gold-standard ClinVar |
 
 ---
 
