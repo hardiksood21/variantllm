@@ -191,8 +191,8 @@ with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction Engine") a
 
 $$\Delta \text{LLR} = \log P(x_i = \text{wt} \mid X_{-i}) - \log P(x_i = \text{mut} \mid X_{-i})$$
 
-- **Positive Delta LLR ($> 1.5$)**: The wildtype amino acid is significantly more evolutionarily favored by natural selection across the phylogenetic tree. The mutation disrupts biophysical stability or catalytic activity -> **Pathogenic / Deleterious**.
-- **Neutral Delta LLR ($\approx 0$)**: The substitution is evolutionarily tolerated -> **Benign / Tolerated**.
+- **Positive ΔLLR (> 1.5)**: The wildtype amino acid is significantly more evolutionarily favored across the phylogenetic tree. The mutation disrupts biophysical stability or catalytic activity → **Pathogenic / Deleterious**.
+- **Neutral / Negative ΔLLR (≈ 0 or < 1.5)**: The substitution is evolutionarily tolerated → **Benign / Tolerated**.
 
 ### Foundation Architecture
 - **Backbone**: Meta AI's `facebook/esm2_t6_8M_UR50D` (6-layer Multi-Head Self-Attention Transformer with Rotary Positional Embeddings).
