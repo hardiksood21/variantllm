@@ -1,4 +1,4 @@
-﻿import os
+import os
 import sys
 
 # Add src to python path for seamless execution on Hugging Face Spaces
@@ -65,7 +65,7 @@ PRESETS = {
 
 def _predict_single(gene, anno, wt_seq, mut_seq):
     if not wt_seq or not mut_seq or len(wt_seq) < 3 or len(mut_seq) < 3:
-        return "Error: Please provide valid protein sequences of at least 3 residues.", 0.0, 0.0, 0.0, pd.DataFrame()
+        return "<p style='color:red;'>Error: Please provide valid protein sequences of at least 3 residues.</p>", 0.0, 0.0, 0.0, pd.DataFrame()
         
     res = scorer.score_sequence_pair(wt_seq, mut_seq)
     
@@ -77,15 +77,18 @@ def _predict_single(gene, anno, wt_seq, mut_seq):
         "Mutant": res["mutant_residue"],
         "LogLikelihood (WT)": res["log_likelihood_wt"],
         "LogLikelihood (Mut)": res["log_likelihood_mut"],
-        "Delta LLR (ΔScore)": res["zero_shot_llr_score"],
+        "Delta LLR (Score)": res["zero_shot_llr_score"],
         "Pathogenicity Probability": f"{res['pathogenicity_prob']:.2%}",
         "Clinical Prediction": res["prediction"]
     }])
     
-    color = "#ef4444" if "Pathogenic" in res["prediction"] else "#10b981"
-    banner = f"<div style='padding:12px; border-radius:8px; background-color:{color}20; border-left:6px solid {color};'>" \
-             f"<h3 style='margin:0; color:{color};'>Prediction: {res['prediction']}</h3>" \
-             f"<p style='margin:4px 0 0 0;'><b>Pathogenicity Risk:</b> {res['pathogenicity_prob']:.2%} | <b>Confidence:</b> {res['confidence_percent']}% | <b>Evolutionary Penalty (ΔLLR):</b> {res['zero_shot_llr_score']:+.4f}</p>" \
+    is_path = "Pathogenic" in res["prediction"]
+    color = "#dc2626" if is_path else "#16a34a"
+    bg_color = "#fee2e2" if is_path else "#dcfce7"
+    
+    banner = f"<div style='padding:16px; border-radius:8px; background-color:{bg_color}; border:1px solid {color}40; border-left:6px solid {color};'>" \
+             f"<h3 style='margin:0 0 6px 0; color:{color}; font-size:18px;'>Prediction: {res['prediction']}</h3>" \
+             f"<p style='margin:0; font-size:14px; color:#1e293b;'><b>Pathogenicity Risk:</b> {res['pathogenicity_prob']:.2%} &nbsp;|&nbsp; <b>Confidence:</b> {res['confidence_percent']}% &nbsp;|&nbsp; <b>Evolutionary Disruption (Delta LLR):</b> {res['zero_shot_llr_score']:+.4f}</p>" \
              f"</div>"
              
     return (
@@ -108,17 +111,17 @@ def _evaluate_all():
             "Annotation": anno,
             "ClinVar Label": expected,
             "Predicted": res["prediction"],
-            "ΔLLR Score": res["zero_shot_llr_score"],
+            "Delta LLR Score": res["zero_shot_llr_score"],
             "Pathogenicity Prob": f"{res['pathogenicity_prob']:.2%}",
-            "Match": "✅ PASS" if correct else "❌ FAIL"
+            "Validation Status": "PASS" if correct else "FAIL"
         })
     df_all = pd.DataFrame(rows)
-    acc = (df_all["Match"] == "✅ PASS").mean() * 100
-    metrics_summary = f"### 📊 ClinVar Benchmark Performance Summary\n" \
+    acc = (df_all["Validation Status"] == "PASS").mean() * 100
+    metrics_summary = f"### ClinVar Benchmark Performance Summary\n" \
                       f"- **Overall Benchmark Accuracy:** **{acc:.1f}%**\n" \
                       f"- **ROC-AUC Score:** **1.0000**\n" \
                       f"- **PR-AUC Score:** **1.0000**\n" \
-                      f"- **Foundation Model:** acebook/esm2_t6_8M_UR50D (Meta ESM-2 Transformer)"
+                      f"- **Foundation Model:** `facebook/esm2_t6_8M_UR50D` (Meta ESM-2 Transformer)"
     return metrics_summary, df_all
 
 if has_spaces:
@@ -135,11 +138,11 @@ def load_preset(choice):
     return "TP53", "p.Arg175His", "", ""
 
 with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction Engine") as demo:
-    gr.Markdown("# 🧬 VariantLLM: Clinical Variant Effect Prediction Engine")
+    gr.Markdown("# VariantLLM: Clinical Variant Effect Prediction Engine")
     gr.Markdown("Zero-shot evolutionary fitness scoring powered by **Meta ESM-2 Transformer Foundation Model**.")
     
     with gr.Tabs():
-        with gr.Tab("🎯 Single Variant In Silico Scorer"):
+        with gr.Tab("Single Variant In Silico Scorer"):
             with gr.Row():
                 with gr.Column(scale=1):
                     preset_dd = gr.Dropdown(
@@ -159,12 +162,12 @@ with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction Engine") a
                         value=PRESETS["TP53 p.Arg175His (Cancer Driver - Pathogenic)"][3],
                         lines=3
                     )
-                    predict_btn = gr.Button("🚀 Run Foundation Model Scoring", variant="primary")
+                    predict_btn = gr.Button("Run Foundation Model Scoring", variant="primary")
                     
                 with gr.Column(scale=1):
                     pred_out = gr.HTML("<p style='color:#64748b;'>Prediction results will appear here after execution.</p>")
                     prob_out = gr.Slider(minimum=0.0, maximum=1.0, label="Pathogenicity Probability Index", interactive=False)
-                    llr_out = gr.Number(label="Zero-Shot Log-Likelihood Ratio (ΔLLR)")
+                    llr_out = gr.Number(label="Zero-Shot Log-Likelihood Ratio (Delta LLR)")
                     entropy_out = gr.Number(label="Site Evolutionary Entropy")
                     df_out = gr.Dataframe(label="Residue Mutation Breakdown")
                     
@@ -175,25 +178,26 @@ with gr.Blocks(title="VariantLLM | Clinical Variant Effect Prediction Engine") a
                 outputs=[pred_out, prob_out, llr_out, entropy_out, df_out]
             )
 
-        with gr.Tab("📊 ClinVar Multi-Gene Benchmark Suite"):
+        with gr.Tab("ClinVar Multi-Gene Benchmark Suite"):
             gr.Markdown("### Automated Evaluation Across Validated Human Disease Hotspots (TP53, BRCA1, EGFR, BRAF, KRAS)")
-            eval_btn = gr.Button("⚡ Execute Live Batch Benchmark Across ClinVar", variant="secondary")
+            eval_btn = gr.Button("Execute Live Batch Benchmark Across ClinVar", variant="secondary")
             batch_summary = gr.Markdown("Click button above to evaluate zero-shot foundation model performance across all ClinVar controls.")
             batch_df = gr.Dataframe(label="ClinVar Validation Results")
             eval_btn.click(fn=run_batch_benchmark, inputs=[], outputs=[batch_summary, batch_df])
             
-        with gr.Tab("📚 Scientific & Mathematical Architecture"):
-            gr.Markdown("""
-            ### 🔬 Masked-Marginal Log-Likelihood Ratio (LLR) Formulation
-            \\Delta \\text{LLR} = \\log P(x_i = \\text{wt} \\mid x_{-i}) - \\log P(x_i = \\text{mut} \\mid x_{-i})
-            
-            - **Positive $\\Delta \\text{LLR}$ ($> 1.5$)**: The wildtype amino acid is significantly more evolutionarily favored by natural selection across the phylogenetic tree. The mutation disrupts biophysical stability or catalytic activity $\\to$ **Pathogenic / Deleterious**.
-            - **Neutral $\\Delta \\text{LLR}$ ($\\approx 0$)**: The substitution is evolutionarily tolerated $\\to$ **Benign / Tolerated**.
-            
-            ### 🏗️ Foundation Architecture
-            - **Backbone**: Meta AI's acebook/esm2_t6_8M_UR50D (6-layer Multi-Head Self-Attention Transformer with Rotary Positional Embeddings).
-            - **Training Data of Backbone**: Tens of millions of non-redundant natural protein sequences from UniRef50.
-            - **Clinical Ground Truth**: NCBI ClinVar, COSMIC somatic mutation database, and UniProtKB.
+        with gr.Tab("Scientific & Mathematical Architecture"):
+            gr.Markdown(r"""
+### Masked-Marginal Log-Likelihood Ratio (LLR) Formulation
+
+$$\Delta \text{LLR} = \log P(x_i = \text{wt} \mid X_{-i}) - \log P(x_i = \text{mut} \mid X_{-i})$$
+
+- **Positive Delta LLR ($> 1.5$)**: The wildtype amino acid is significantly more evolutionarily favored by natural selection across the phylogenetic tree. The mutation disrupts biophysical stability or catalytic activity -> **Pathogenic / Deleterious**.
+- **Neutral Delta LLR ($\approx 0$)**: The substitution is evolutionarily tolerated -> **Benign / Tolerated**.
+
+### Foundation Architecture
+- **Backbone**: Meta AI's `facebook/esm2_t6_8M_UR50D` (6-layer Multi-Head Self-Attention Transformer with Rotary Positional Embeddings).
+- **Training Data of Backbone**: Tens of millions of non-redundant natural protein sequences from UniRef50.
+- **Clinical Ground Truth**: NCBI ClinVar, COSMIC somatic mutation database, and UniProtKB.
             """)
 
     gr.Markdown("---")
