@@ -117,8 +117,27 @@ uvicorn variantllm.api.main:app --reload --port 8000
 | **F1-Score** | **0.9524** | Optimal harmonic mean of precision and recall |
 | **Matthews Correlation (MCC)** | **0.8919** | High-fidelity correlation on gold-standard ClinVar |
 
+## 📄 Research Paper & Citation
+
+If you use **VariantLLM** or its zero-shot scoring engine in your research, please cite our open-access preprint:
+
+> **Sood, H.** (2026). *VariantLLM: An Open-Source Foundation Model Microservice for Zero-Shot Clinical Variant Effect Prediction*. CERN Zenodo.  
+> **DOI:** [10.5281/zenodo.22269466](https://doi.org/10.5281/zenodo.22269466) *(Under peer review at the Journal of Open Source Software)*
+
+### BibTeX
+```bibtex
+@article{sood2026variantllm,
+  author    = {Hardik Sood},
+  title     = {VariantLLM: An Open-Source Foundation Model Microservice for Zero-Shot Clinical Variant Effect Prediction},
+  journal   = {Zenodo},
+  year      = {2026},
+  doi       = {10.5281/zenodo.22269466},
+  url       = {https://doi.org/10.5281/zenodo.22269466}
+}
+```
+
 ---
 
-## 📜 Citation & License
+## 📜 License
 
-Distributed under the **MIT License**. Created by [Hardik Sood](https://github.com/hardiksood21).
+Distributed under the **MIT License**. Created by [Hardik Sood](https://github.com/hardiksood21) (Indian Institute of Technology (BHU), Varanasi).
