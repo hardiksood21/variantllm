@@ -16,6 +16,7 @@ license: mit
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22269466.svg)](https://doi.org/10.5281/zenodo.22269466)
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/hardiksood21/variantllm)
 
 An open-source, production-grade genomic foundation AI software system designed to predict the pathogenicity, functional consequence, and zero-shot evolutionary fitness scores of human genetic mutations and single-nucleotide variants (SNVs) powered by **Meta's ESM-2 Foundation Model**.
